@@ -134,25 +134,147 @@ import numpy
 # print(scores)
 
 
-"""
-从列表中找出最大的或最小的N个元素
-堆结构(大根堆/小根堆)
-"""
-import heapq
-
-list1 = [34, 25, 12, 99, 87, 63, 58, 78, 88, 92]
-list2 = [
-    {'name': 'IBM', 'shares': 100, 'price': 91.1},
-    {'name': 'AAPL', 'shares': 50, 'price': 543.22},
-    {'name': 'BBB', 'shares': 50, 'price': 543.22},
-    {'name': 'FB', 'shares': 200, 'price': 21.09},
-    {'name': 'HPQ', 'shares': 35, 'price': 31.75},
-    {'name': 'YHOO', 'shares': 45, 'price': 16.35},
-    {'name': 'ACME', 'shares': 75, 'price': 115.65}
-]
-h = heapq.heapify(list1)
-print(heapq.heappushpop(h, 3))
+# """
+# 从列表中找出最大的或最小的N个元素
+# 堆结构(大根堆/小根堆)
+# """
+# import heapq
+#
+# list1 = [34, 25, 12, 99, 87, 63, 58, 78, 88, 92]
+# list2 = [
+#     {'name': 'IBM', 'shares': 100, 'price': 91.1},
+#     {'name': 'AAPL', 'shares': 50, 'price': 543.22},
+#     {'name': 'BBB', 'shares': 50, 'price': 543.22},
+#     {'name': 'FB', 'shares': 200, 'price': 21.09},
+#     {'name': 'HPQ', 'shares': 35, 'price': 31.75},
+#     {'name': 'YHOO', 'shares': 45, 'price': 16.35},
+#     {'name': 'ACME', 'shares': 75, 'price': 115.65}
+# ]
+# h = heapq.heapify(list1)
+# print(heapq.heappushpop(h, 3))
 # print(heapq.nlargest(3, list1))
 # print(heapq.nsmallest(3, list1))
 # print(heapq.nlargest(2, list2, key=lambda x: x['price']))
 # print(heapq.nlargest(2, list2, key=lambda x: x['shares']))
+
+
+# # 五人分鱼，穷举法例子
+# f = 6
+# enough = False
+# while not enough:
+#     enough = True
+#     fish = f
+#     for _ in range(5):
+#         fish -= 1
+#         if fish <= 0 or fish % 5 != 0:
+#             enough = False
+#             break
+#         fish = fish // 5 * 4
+#     if enough:
+#         print(f)
+#     f += 5
+
+
+# # 小偷快速找到满意解
+# class thing(object):
+#     def __init__(self, name, value, weight):
+#         self._name = name
+#         self._value = value
+#         self._weight = weight
+#     @property
+#     def value(self):
+#         return self._value
+#     @property
+#     def weight(self):
+#         return self._weight
+#
+# def chioce():
+#     ls_name = ['电脑', '收音机', '钟', '花瓶', '书', '油画']
+#     ls_value = [200, 20, 175, 50, 10, 90]
+#     ls_weight = [20, 4, 10, 2, 1, 9]
+#     ls = []
+#     for i in range(len(ls_name)):
+#         ls.append(thing(ls_name[i], ls_value[i], ls_weight[i]))
+#     ls = sorted(ls, key=lambda x: x.value/x.weight)
+#
+#     for i in range(len(ls)):
+#         print(ls[i].value)
+#
+# chioce()
+
+
+# # 分治法，快速排序
+# def quick_sort(origin_items, cmp=lambda x,y: x>y):
+#     if len(origin_items) <= 1:
+#         return origin_items
+#
+#     pivot = origin_items[0]
+#     i, j = 1, len(origin_items)-1
+#     while i < j:
+#         while i < len(origin_items) and cmp(pivot, origin_items[i]):
+#             i += 1
+#         while j > 0 and cmp(origin_items[j], pivot):
+#             j -= 1
+#         if i < j:
+#             origin_items[i], origin_items[j] = origin_items[j], origin_items[i]
+#     origin_items[0], origin_items[j] = origin_items[j], origin_items[0]
+#
+#     left = []
+#     right = []
+#     if i > 0:
+#         left = quick_sort(origin_items[:j])
+#     if i < len(origin_items) - 1:
+#         right = quick_sort(origin_items[j+1:])
+#
+#     return left + [origin_items[j]] + right
+#
+# print(quick_sort([2, 5, 9, 1, 6, 3]))
+
+
+"""
+递归回溯法：叫称为试探法，按选优条件向前搜索，当搜索到某一步，发现原先选择并不优或达不到目标时，就退回一步重新选择，比较经典的问题包括骑士巡逻、八皇后和迷宫寻路等。
+"""
+import sys
+import time
+
+SIZE = 5
+total = 0
+
+
+def print_board(board):
+    for row in board:
+        for col in row:
+            print(str(col).center(4), end='')
+        print()
+
+
+def patrol(board, row, col, step=1):
+    if row >= 0 and row < SIZE and col >= 0 and col < SIZE and board[row][col] == 0:
+        board[row][col] = step
+        if step == SIZE * SIZE:
+            global total
+            total += 1
+            print(f'第{total}种走法: ')
+            print_board(board)
+        patrol(board, row - 2, col - 1, step + 1)
+        patrol(board, row - 1, col - 2, step + 1)
+        patrol(board, row + 1, col - 2, step + 1)
+        patrol(board, row + 2, col - 1, step + 1)
+        patrol(board, row + 2, col + 1, step + 1)
+        patrol(board, row + 1, col + 2, step + 1)
+        patrol(board, row - 1, col + 2, step + 1)
+        patrol(board, row - 2, col + 1, step + 1)
+        board[row][col] = 0
+
+
+def main():
+    board = [[0] * SIZE for _ in range(SIZE)]
+    patrol(board, SIZE - 1, SIZE - 1)
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
