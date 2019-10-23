@@ -1,4 +1,5 @@
 import numpy
+import math
 #
 # # 选择排序
 # def selection_sort(origion_items, cmp=lambda x,y: x>y):
@@ -231,49 +232,92 @@ import numpy
 # print(quick_sort([2, 5, 9, 1, 6, 3]))
 
 
-"""
-递归回溯法：叫称为试探法，按选优条件向前搜索，当搜索到某一步，发现原先选择并不优或达不到目标时，就退回一步重新选择，比较经典的问题包括骑士巡逻、八皇后和迷宫寻路等。
-"""
-import sys
-import time
+# """
+# 递归回溯法：叫称为试探法，按选优条件向前搜索，当搜索到某一步，发现原先选择并不优或达不到目标时，就退回一步重新选择，比较经典的问题包括骑士巡逻、八皇后和迷宫寻路等。
+# """
+# import sys
+# import time
+#
+# SIZE = 5
+# total = 0
+#
+#
+# def print_board(board):
+#     for row in board:
+#         for col in row:
+#             print(str(col).center(4), end='')
+#         print()
+#
+#
+# def patrol(board, row, col, step=1):
+#     if row >= 0 and row < SIZE and col >= 0 and col < SIZE and board[row][col] == 0:
+#         board[row][col] = step
+#         if step == SIZE * SIZE:
+#             global total
+#             total += 1
+#             print(f'第{total}种走法: ')
+#             print_board(board)
+#         patrol(board, row - 2, col - 1, step + 1)
+#         patrol(board, row - 1, col - 2, step + 1)
+#         patrol(board, row + 1, col - 2, step + 1)
+#         patrol(board, row + 2, col - 1, step + 1)
+#         patrol(board, row + 2, col + 1, step + 1)
+#         patrol(board, row + 1, col + 2, step + 1)
+#         patrol(board, row - 1, col + 2, step + 1)
+#         patrol(board, row - 2, col + 1, step + 1)
+#         board[row][col] = 0
+#
+#
+# def main():
+#     board = [[0] * SIZE for _ in range(SIZE)]
+#     patrol(board, SIZE - 1, SIZE - 1)
+#
+#
+# if __name__ == '__main__':
+#     main()
 
-SIZE = 5
-total = 0
+
+# 自顶向下的备忘录法
+
+# def number_tower():
+#     case_num = int(input("例子数"))
+#     for _ in range(case_num):
+#         level_num = int(input("层数"))
+#         ls = []
+#         l = []
+#         dp = [[0 for _ in range(j+1)] for j in range(level_num)]
+#         for i in range(level_num):
+#             for _ in range(i+1):
+#                 n = int(input("输入编号，按回车键"))
+#                 l.append(n)
+#             c = l.copy()
+#             # 得先复制一个c，否则l被清空，ls也不会保留了
+#             ls.append(c)
+#             l.clear()
+#
+#         dp[0][0] = ls[0][0]
+#         for i in range(1, level_num):
+#             for j in range(i+1):
+#                 if j == 0:
+#                     dp[i][j] = dp[i-1][0]+ls[i][j]
+#                 elif j == i:
+#                     dp[i][j] = dp[i-1][i-1] + ls[i][j]
+#                 else:
+#                     dp[i][j] = max(dp[i-1][(j-1)//2] + ls[i][j],
+#                                    dp[i-1][(j+1)//2] + ls[i][j])
+#
+#         print(max(dp[level_num-1]))
+#
+# number_tower()
 
 
-def print_board(board):
-    for row in board:
-        for col in row:
-            print(str(col).center(4), end='')
-        print()
+a = '12'
+
+b = a
+a += "3"
+print(b)
 
 
-def patrol(board, row, col, step=1):
-    if row >= 0 and row < SIZE and col >= 0 and col < SIZE and board[row][col] == 0:
-        board[row][col] = step
-        if step == SIZE * SIZE:
-            global total
-            total += 1
-            print(f'第{total}种走法: ')
-            print_board(board)
-        patrol(board, row - 2, col - 1, step + 1)
-        patrol(board, row - 1, col - 2, step + 1)
-        patrol(board, row + 1, col - 2, step + 1)
-        patrol(board, row + 2, col - 1, step + 1)
-        patrol(board, row + 2, col + 1, step + 1)
-        patrol(board, row + 1, col + 2, step + 1)
-        patrol(board, row - 1, col + 2, step + 1)
-        patrol(board, row - 2, col + 1, step + 1)
-        board[row][col] = 0
-
-
-def main():
-    board = [[0] * SIZE for _ in range(SIZE)]
-    patrol(board, SIZE - 1, SIZE - 1)
-
-
-if __name__ == '__main__':
-    main()
 
 
 
